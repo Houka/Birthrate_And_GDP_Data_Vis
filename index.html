@@ -8,13 +8,18 @@
 	</style>
 </head>
 <body>
+	<!--
+		Note: to open up server use:
+			python -m SimpleHTTPServer 
+			python -m http.server
+	-->
 
 	<div id="visualization" style="width: 100%;"></div>
 
 	<script>
 		var debug = true;
 		var footerOffset = 20;
-		var mainDiv = d3.select("#visualization")
+		var mainDiv = d3.select("#visualization");
 						
 		// code for debugs
 		if (debug) 
@@ -53,5 +58,9 @@
 
 	</script>
 
+	<script src = "lineGraphs.js"></script>
+	<!--
+	<script src = "circleGraphs.js"></script>
+	-->
 </body>
 </html>
