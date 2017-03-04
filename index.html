@@ -1,0 +1,44 @@
+<html>
+<head>
+	<title>INFO 3300 - Project 1</title>
+	<script src="https://d3js.org/d3.v4.min.js"></script>
+	<script src="http://d3js.org/topojson.v2.min.js"></script>
+	<style>
+		svg { border: solid #ccc 1px; }
+	</style>
+</head>
+<body>
+
+	<div id="visualization"></div>
+
+	<script>
+
+		var birthData, rawBirthData;
+		var GDPData, rawGDPData;
+
+		function parseBirth (line) {
+			return { 
+				// ??
+			};
+		}
+
+		d3.csv("BirthRate.csv", parseBirth, function(error, data){
+			rawBirthData = data;
+			//use d3.nest?
+		});
+
+		function parseGDP (line) {
+			return { 
+				// ??
+			};
+		}
+
+		d3.csv("GDPPerCap.csv", parseGDP, function(error, data){
+			rawGDPData = data;
+			//use d3.nest?
+		});
+
+	</script>
+
+</body>
+</html>
