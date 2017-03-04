@@ -39,8 +39,9 @@ def filterData(data, threshold):
 			result.append(d)
 	return result
 
-newBirthRate = filterData(birthRateCsv, 10)
-newGDP = filterData(GDPCsv, 10)
+threshold = 2
+newBirthRate = filterData(birthRateCsv, threshold)
+newGDP = filterData(GDPCsv, threshold)
 
 print(len(newBirthRate))
 print(len(newGDP))
@@ -51,11 +52,16 @@ finalGDP = []
 for i in range(len(newBirthRate)):
 	for j in range(len(newGDP)):
 		if (newBirthRate[i]['Country Name'] == newGDP[j]['Country Name']):
+			newBirthRate[i].pop(None)
+			newGDP[j].pop(None)
 			finalBirthRate.append(newBirthRate[i])
 			finalGDP.append(newGDP[j])
 
 print(len(finalBirthRate))
 print(len(finalGDP))
 
-writeCsv('FilteredBirthRate.csv', fields+[None], finalBirthRate)
-writeCsv('FilteredGDPPerCap.csv', fields+[None], finalGDP)
+finalBirthRate = finalBirthRate[1:]
+finalGDP = finalGDP[1:]
+
+writeCsv('FilteredBirthRate.csv', fields, finalBirthRate)
+writeCsv('FilteredGDPPerCap.csv', fields, finalGDP)
