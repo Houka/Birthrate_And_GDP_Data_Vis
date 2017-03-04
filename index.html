@@ -9,10 +9,23 @@
 </head>
 <body>
 
-	<div id="visualization"></div>
+	<div id="visualization" style="width: 100%;"></div>
 
 	<script>
+		var debug = true;
+		var footerOffset = 20;
+		var mainDiv = d3.select("#visualization")
+						
+		// code for debugs
+		if (debug) 
+			mainDiv.style("border", "1px solid black");
 
+		// set height to window height
+		mainDiv.style("height", window.innerHeight - footerOffset);
+
+	</script>
+
+	<script>		
 		var birthData, rawBirthData;
 		var GDPData, rawGDPData;
 
@@ -22,7 +35,7 @@
 			};
 		}
 
-		d3.csv("BirthRate.csv", parseBirth, function(error, data){
+		d3.csv("FilteredBirthRate.csv", parseBirth, function(error, data){
 			rawBirthData = data;
 			//use d3.nest?
 		});
@@ -33,7 +46,7 @@
 			};
 		}
 
-		d3.csv("GDPPerCap.csv", parseGDP, function(error, data){
+		d3.csv("FilteredGDPPerCap.csv", parseGDP, function(error, data){
 			rawGDPData = data;
 			//use d3.nest?
 		});
