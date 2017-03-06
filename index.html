@@ -36,16 +36,11 @@
 		var GDPData;
 		var rawGDPData;
 
-		loadData(function(rawBirthData, birthData, rawGDPData, GDPData) {
-			console.log(rawBirthData);
-			console.log(birthData);
-			console.log(rawGDPData);
-			console.log(GDPData);
-
+		loadData(function(rawBirthData, birthData, rawGDPData, GDPData, rawCombinedData, combinedData) {
 			// anything not in here can't view the 'global' variables, will find a work around if possible in time frame
 			// DO ALL CODE IN HERE! //
 
-
+			console.log(combinedData);
 
 
 		});
@@ -71,7 +66,16 @@
 					.sortKeys(d3.ascending)
 					.entries(rawGDPData);
 
-					callback(rawBirthData, nestedBirthData, rawGDPData, nestedGDPData);
+					d3.csv("Combined.csv", parseCombined, function(error, data) {
+						var nestedCombinedData = d3.nest()
+						.key(function(d){
+							return d.country;
+						})
+						.sortKeys(d3.ascending)
+						.entries(data);
+
+						callback(rawBirthData, nestedBirthData, rawGDPData, nestedGDPData, data, nestedCombinedData);
+					});
 				});
 			});
 		};
@@ -92,6 +96,14 @@
 				GDP: line['2014']
 			};*/
 			return line;
+		}
+
+		function parseCombined(line) {
+			return {
+				country: line.country,
+				birthrate: line.birthrate,
+				gdp: line.gdppercap
+			}
 		}
 
 	</script>
