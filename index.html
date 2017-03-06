@@ -12,14 +12,14 @@
 		Note: to open up server use:
 			python -m SimpleHTTPServer 
 			python -m http.server
-		-->
+	-->
 
-		<div id="visualization" style="width: 100%;"></div>
+	<div id="visualization" style="width: 100%;"></div>
 
-		<script>
-			var debug = true;
-			var footerOffset = 20;
-			var mainDiv = d3.select("#visualization");
+	<script>
+		var debug = true;
+		var footerOffset = 20;
+		var mainDiv = d3.select("#visualization");
 
 		// code for debugs
 		if (debug) 
@@ -29,6 +29,11 @@
 		mainDiv.style("height", window.innerHeight - footerOffset);
 
 	</script>
+
+	<script src = "lineGraphs.js"></script>
+	<!--
+	<script src = "circleGraphs.js"></script>
+	-->
 
 	<script>		
 		var birthData;
@@ -42,7 +47,7 @@
 			// anything not in here can't view the 'global' variables, will find a work around if possible in time frame
 			// DO ALL CODE IN HERE! //
 
-			console.log(combinedData);
+			displayData(combinedData);
 
 
 		});
@@ -110,9 +115,5 @@
 
 	</script>
 
-	<script src = "lineGraphs.js"></script>
-	<!--
-	<script src = "circleGraphs.js"></script>
--->
 </body>
 </html>
