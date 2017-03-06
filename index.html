@@ -4,6 +4,7 @@
 	<script src="https://d3js.org/d3.v4.min.js"></script>
 	<script src="http://d3js.org/topojson.v2.min.js"></script>
 	<style>
+		div { font-family: Arial; color: #ccc }
 		svg { border: solid #ccc 1px; }
 	</style>
 </head>
@@ -14,11 +15,13 @@
 			python -m http.server
 	-->
 
-	<div id="visualization" style="width: 100%;"></div>
+	<div id="visualization" style="width: 100%;">
+	Source: http://data.worldbank.org
+	</div>
 
 	<script>
-		var debug = true;
-		var footerOffset = 20;
+		var debug = false;
+		var footerOffset = 30;
 		var mainDiv = d3.select("#visualization");
 
 		// code for debugs
@@ -30,9 +33,9 @@
 
 	</script>
 
-	<script src = "lineGraphs.js"></script>
-	<!--
 	<script src = "circleGraphs.js"></script>
+	<!--
+	<script src = "lineGraphs.js"></script>
 	-->
 
 	<script>		
@@ -47,7 +50,7 @@
 			// anything not in here can't view the 'global' variables, will find a work around if possible in time frame
 			// DO ALL CODE IN HERE! //
 
-			displayData(combinedData);
+			displayCombinedData(combinedData);
 
 
 		});
