@@ -12,15 +12,15 @@
 		Note: to open up server use:
 			python -m SimpleHTTPServer 
 			python -m http.server
-	-->
+		-->
 
-	<div id="visualization" style="width: 100%;"></div>
+		<div id="visualization" style="width: 100%;"></div>
 
-	<script>
-		var debug = true;
-		var footerOffset = 20;
-		var mainDiv = d3.select("#visualization");
-						
+		<script>
+			var debug = true;
+			var footerOffset = 20;
+			var mainDiv = d3.select("#visualization");
+
 		// code for debugs
 		if (debug) 
 			mainDiv.style("border", "1px solid black");
@@ -31,36 +31,74 @@
 	</script>
 
 	<script>		
-		var birthData, rawBirthData;
-		var GDPData, rawGDPData;
+		var birthData;
+		var rawBirthData;
+		var GDPData;
+		var rawGDPData;
+
+		loadData(function(rawBirthData, birthData, rawGDPData, GDPData) {
+			console.log(rawBirthData);
+			console.log(birthData);
+			console.log(rawGDPData);
+			console.log(GDPData);
+
+			// anything not in here can't view the 'global' variables, will find a work around if possible in time frame
+			// DO ALL CODE IN HERE! //
+
+
+
+
+		});
+
+		function loadData(callback){
+			d3.csv("FilteredBirthRate.csv", parseBirth, function(error, data){
+				rawBirthData = data;
+
+				var nestedBirthData = d3.nest()
+				.key(function(d) {
+					return d.country; 
+				})
+				.sortKeys(d3.ascending)
+				.entries(rawBirthData);
+
+				d3.csv("FilteredGDPPerCap.csv", parseGDP, function(error, data){
+					rawGDPData = data;
+
+					var nestedGDPData = d3.nest()
+					.key(function(d) {
+						return d.country; 
+					})
+					.sortKeys(d3.ascending)
+					.entries(rawGDPData);
+
+					callback(rawBirthData, nestedBirthData, rawGDPData, nestedGDPData);
+				});
+			});
+		};
 
 		function parseBirth (line) {
-			return { 
-				// ??
-			};
+			line.country = line['Country Name'];
+		/*	return {
+				country: line.country,
+				birthrate: line['2014']
+			};*/
+			return line;
 		}
-
-		d3.csv("FilteredBirthRate.csv", parseBirth, function(error, data){
-			rawBirthData = data;
-			//use d3.nest?
-		});
 
 		function parseGDP (line) {
-			return { 
-				// ??
-			};
+			line.country = line['Country Name'];
+		/*	return {
+				country: line.country,
+				GDP: line['2014']
+			};*/
+			return line;
 		}
-
-		d3.csv("FilteredGDPPerCap.csv", parseGDP, function(error, data){
-			rawGDPData = data;
-			//use d3.nest?
-		});
 
 	</script>
 
 	<script src = "lineGraphs.js"></script>
 	<!--
 	<script src = "circleGraphs.js"></script>
-	-->
+-->
 </body>
 </html>
