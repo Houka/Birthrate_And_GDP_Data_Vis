@@ -23,7 +23,7 @@ function displayCombinedData(combinedData, nestedCombinedData){
 	.attr("height", "100%")
 	.attr("width", "100%");
 
-	var birthRateColors = ['#b2182b','#ef8a62','#fddbc7','#f7f7f7','#d1e5f0','#67a9cf','#2166ac'];
+	var birthRateColors =['#f7bba6','#ed8495','#e05286','#a73b8f','#6f2597','#511b75','#37114e'];
 
 	var birthRateExtent = d3.extent(combinedData, function(d) {	
 		var data = d.values[0];
@@ -49,7 +49,7 @@ function displayCombinedData(combinedData, nestedCombinedData){
 
 	var continent = nestedCombinedData;
 	// if (continent.name == "AF") { 
-		g = g.attr("transform", "translate(2,2)"); // or whatever
+		g = g.attr("transform", "translate("+screenWidth/-4+",2)"); // or whatever
 		continent = d3.hierarchy(continent)
 		.sum(function(d) {
 			return d.size;
@@ -65,9 +65,21 @@ function displayCombinedData(combinedData, nestedCombinedData){
 			/*var br = scaleBirthRate(+d.data.birthrate);
 			var gdp = scaleGDP(+d.data.size);*/
 
+
 		node.append("circle")
 		.attr("r", function(d) {return d.r;})
-		.style("fill", function(d) {return scaleBirthRate(+d.data.birthrate)});
+		.style("fill", function(d) {
+			if (d.data.birthrate)
+				return scaleBirthRate(+d.data.birthrate);
+			else
+				return "white";
+		})
+		.style("stroke", function(d) {
+			if (d.data.birthrate || d.data.name == "World") 
+				return "none";
+			else 
+				return "#ccc";
+		});
 
 		node.append("title") 
 		.text(function(d){return d.data.name;})
