@@ -36,7 +36,8 @@
 
 	</script>
 
-	<script src = "circleGraphs.js"></script>
+	<script src = "CircleGraph.js"></script>
+	<script src = "DataFilterer.js"></script>
 	<!--
 	<script src = "lineGraphs.js"></script>
 	-->
@@ -47,63 +48,12 @@
 		var GDPData;
 		var rawGDPData;
 
-		/* Returns true if the countryName is a valid country name false otherwise
-		*/ 
-		function isValidCountryName(countryName, countryData){
-			if(countryData[countryName] == null)
-				return false;
-			return true;
-		}
-
-		/* Returns Combination of all 3 data structures into one array of country object.
-			A country object for example may be:
-			{
-				country: Barbados,
-				birthrate: 12341,
-				gdp: 412413,
-				continent: NA,
-				iso2: BB,
-			}
-		*/
-		function combineData(year,birthData,GDPData,continentData){
-			var result = [];
-			for(var i = 0; i<birthData.length; i++){
-				var birthObj = birthData[i].values[0];
-				var GDPObj = GDPData[i].values[0];
-				var countryName = birthObj.country;
-
-				if (isValidCountryName(countryName, continentData)){
-					var birthYear = birthObj[year];
-					var GDPYear = GDPObj[year];
-					var countryData =  continentData[countryName];
-
-					var combinedObj = {
-						key:countryName,
-						values:[
-							{
-								country: countryName,
-								birthrate: birthYear,
-								gdp: GDPYear,
-								continent: countryData[0],
-								countrycode: countryData[1]
-							}
-						]
-					}
-					result = result.concat([combinedObj]);
-				}else{
-					console.debug("invalid country name: "+ countryName);
-				}
-			}
-			return result;
-		}
-
-
 		/* Load the csv data files and then runs a callback to display the data
 		*/
 		loadData(function( rawBirthData, birthData, 
 						   rawGDPData, GDPData, 
-						   rawContinentData) {
-			displayCombinedData(combineData(1999, birthData, GDPData, rawContinentData));
+						   rawCountryData) {
+			displayCombinedData(combineData(1999, birthData, GDPData, rawCountryData));
 		});
 
 		/* Loads and parses the data files and then supplies the callback with the data in a easy to use form*/
@@ -128,7 +78,7 @@
 					.sortKeys(d3.ascending)
 					.entries(rawGDPData);
 
-					d3.json("countryToContinentMapping.json", function(error, data) {
+					d3.json("CountryData.json", function(error, data) {
 						callback(rawBirthData, nestedBirthData, rawGDPData, nestedGDPData, data);
 					});
 				});
