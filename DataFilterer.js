@@ -29,21 +29,36 @@ function combineData(year,birthData,GDPData,countryData){
 			var countryObj =  countryData[countryName];
 
 			var combinedObj = {
-				key:countryName,
-				values:[
-					{
-						country: countryName,
-						birthrate: birthYear,
-						gdp: GDPYear,
-						continent: countryObj[0],
-						countrycode: countryObj[1]
-					}
-				]
-			}
+				country: countryName,
+				birthrate: birthYear,
+				gdp: GDPYear,
+				continent: countryObj[0],
+				countrycode: countryObj[1]
+			};
 			result = result.concat([combinedObj]);
-		}else{
+		}else if (debug){
 			console.debug("invalid country name: "+ countryName);
 		}
 	}
-	return result;
+
+	var convertedData = d3.nest()
+		.key(function(d) {
+			return d.continent; 
+		})
+		.key(function(d){
+			return d.country;
+		})
+		.entries(result);
+	return convertedData;
+}
+
+/* Returns a filtered array of data objects based off data
+	A data object will be filtered out if it crosses the threshold of not containing 
+	enough information (i.e. birthrate or gdp) in all the catagories
+*/
+function filterData(data, threshold){
+	var result = [];
+	for(var i = 0; i<data.length; i++){
+		var value = data[i].values[0];
+	}
 }
