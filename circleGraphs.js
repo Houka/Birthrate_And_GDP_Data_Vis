@@ -46,7 +46,7 @@ function displayCombinedData(combinedData){
 				.attr("height", "100%")
 				.attr("width", "100%");
 
-	var birthRateColors = ['#00FFFF', '#FF00FF'];
+	var birthRateColors = ['#ffffcc','#a1dab4','#41b6c4','#2c7fb8','#253494'];
 
 	var birthRateExtent = d3.extent(combinedData, function(d) {	
 		var data = d.values[0];
@@ -57,7 +57,7 @@ function displayCombinedData(combinedData){
 		return +data.gdp; 
 	});
 
-	var scaleBirthRate = d3.scaleLinear()
+	var scaleBirthRate = d3.scaleOrdinal()
 		.domain(birthRateExtent)
 		.range(birthRateColors);
 
@@ -84,12 +84,12 @@ function displayCombinedData(combinedData){
 			.attr("cy",cy)
 			.style("fill", br);
 		
-		svg.append("text")
+		/*svg.append("text")
 			.attr("x",cx)
 			.attr("y",cy)
 			.attr("text-anchor","middle")
 			.attr("alignment-baseline","middle")
 			.text("br: "+br+", gdp:"+gdp)
-			.attr("fill", TEXT_COLOR);
+			.attr("fill", TEXT_COLOR);*/
 	})
 }
