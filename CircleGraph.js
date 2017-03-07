@@ -49,7 +49,7 @@ function displayCombinedData(combinedData, nestedCombinedData){
 
 	var continent = nestedCombinedData;
 	// if (continent.name == "AF") { 
-		g = g.attr("transform", "translate("+screenWidth/-4+",2)"); // or whatever
+		g = g.attr("transform", "translate("+screenWidth/-4+"0)"); // or whatever
 		continent = d3.hierarchy(continent)
 		.sum(function(d) {
 			return d.size;
@@ -58,27 +58,34 @@ function displayCombinedData(combinedData, nestedCombinedData){
 		pack(continent);
 
 		var node = g.selectAll(".node")
-		.data(continent.descendants())
+		.data(continent.leaves())
 		.enter().append("g")
-		.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+		.attr("transform", function(d) {
+			/*if (d.data.name == "AF" || (d.parent) && d.parent.data.name == "AF") {
+				return "translate(" + (d.x + 300) + "," + d.y + ")"; 
+			}
+			else*/ 
+				return "translate(" + d.x + "," + d.y + ")"; 
+		});
 
-			/*var br = scaleBirthRate(+d.data.birthrate);
-			var gdp = scaleGDP(+d.data.size);*/
-
-
+		console.log(continent.leaves());
+		
 		node.append("circle")
 		.attr("r", function(d) {return d.r;})
 		.style("fill", function(d) {
-			if (d.data.birthrate)
+			if (d.data.birthrate){
 				return scaleBirthRate(+d.data.birthrate);
+			}
 			else
 				return "white";
 		})
 		.style("stroke", function(d) {
 			if (d.data.birthrate || d.data.name == "World") 
 				return "none";
-			else 
+			else {
+				//console.log(d.data);
 				return "#ccc";
+			}
 		});
 
 		node.append("title") 
