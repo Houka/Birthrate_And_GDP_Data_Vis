@@ -36,7 +36,7 @@ function displayCombinedData(combinedData, nestedCombinedData){
 
 	var g = svg.append("g");
 	var format = d3.format(",d");
-	var pack = d3.pack().size([screenWidth, screenHeight]);
+	var pack = d3.pack().size([screenWidth, screenHeight]).padding(0.5);
 
 	var continent = nestedCombinedData;
 
@@ -58,6 +58,21 @@ function displayCombinedData(combinedData, nestedCombinedData){
 		}
 		else
 			return "translate(" + d.x + "," + d.y + ")"; 
+	});
+
+	// add circles for continent
+	continent.children.forEach(function(continent) {
+		var continentG = g.append("g");
+
+		continentG.append("circle")
+		.attr("r", continent.r)
+		.style("stroke", "#ccc")
+		.style("fill", "none");
+
+		// same concept as translating colored circles
+		if (continent.data.name == "AF") {
+			continentG.attr("transform", "translate(" + (continent.x + 300) + "," + continent.y + ")")
+		}
 	});
 
 	node.append("circle")
