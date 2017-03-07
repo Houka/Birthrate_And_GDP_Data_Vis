@@ -79,15 +79,17 @@
 					.sortKeys(d3.ascending)
 					.entries(rawGDPData);
 
-					d3.csv("Combined.csv", parseCombined, function(error, data) {
-						var nestedCombinedData = d3.nest()
+					d3.csv("countryToContinentMapping.csv", parseContinent, function(error, data) {
+						console.log(data);
+
+						var nestedContinentData = d3.nest()
 						.key(function(d){
 							return d.country;
 						})
 						.sortKeys(d3.ascending)
 						.entries(data);
 
-						callback(rawBirthData, nestedBirthData, rawGDPData, nestedGDPData, data, nestedCombinedData);
+						callback(rawBirthData, nestedBirthData, rawGDPData, nestedGDPData, data, nestedContinentData);
 					});
 				});
 			});
@@ -111,12 +113,8 @@
 			return line;
 		}
 
-		function parseCombined(line) {
-			return {
-				country: line.country,
-				birthrate: +line.birthrate,
-				gdp: +line.gdppercap
-			}
+		function parseContinent(line) {
+			return line;
 		}
 
 	</script>
