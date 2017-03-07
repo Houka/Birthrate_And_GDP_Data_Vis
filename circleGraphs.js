@@ -27,7 +27,7 @@ function displayBirthAndGDPData(birthData,GDPData,year){
 		result = result.concat([combinedObj]);
 	}
 
-	displayCombinedData(result);
+	return result;
 }
 
 function mapLocationX(countryName){
