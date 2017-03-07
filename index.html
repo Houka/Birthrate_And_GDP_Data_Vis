@@ -53,7 +53,9 @@
 		loadData(function( rawBirthData, birthData, 
 						   rawGDPData, GDPData, 
 						   rawCountryData) {
-			displayCombinedData(combineData(1999, birthData, GDPData, rawCountryData));
+			filterData(GDPData,2);
+			var combinedData = combineData(1999, birthData, GDPData, rawCountryData);
+			displayCombinedData(combineData, convertData(combineData));
 		});
 
 		/* Loads and parses the data files and then supplies the callback with the data in a easy to use form*/
@@ -68,7 +70,7 @@
 				.sortKeys(d3.ascending)
 				.entries(rawBirthData);
 
-				d3.csv("FilteredGDPPerCap.csv", parseGDP, function(error, data){
+				d3.csv("GDPPerCap.csv", parseGDP, function(error, data){
 					rawGDPData = data;
 
 					var nestedGDPData = d3.nest()

@@ -40,7 +40,12 @@ function combineData(year,birthData,GDPData,countryData){
 			console.debug("invalid country name: "+ countryName);
 		}
 	}
+	return result;
+}
 
+/* Returns the data set but converted to a nested specification
+*/
+function convertData(data){
 	var convertedData = d3.nest()
 		.key(function(d) {
 			return d.continent; 
@@ -52,13 +57,31 @@ function combineData(year,birthData,GDPData,countryData){
 	return convertedData;
 }
 
+/* Returns the number of times an empty string is found in the array
+*/
+function countEmptyStrings(array){
+	var c = 0;
+	array.forEach(function(d){
+		if (d)
+			c++;
+	})
+	return c;
+}
+
 /* Returns a filtered array of data objects based off data
 	A data object will be filtered out if it crosses the threshold of not containing 
 	enough information (i.e. birthrate or gdp) in all the catagories
 */
 function filterData(data, threshold){
 	var result = [];
+	var c = 0;
 	for(var i = 0; i<data.length; i++){
-		var value = data[i].values[0];
+		var valueObj = data[i].values[0];
+		var values = Object.values(valueObj);
+
+		if (countEmptyStrings(values) <= threshold)
+			c++;
 	}
+	console.log(c);
+	console.log(data.length);
 }
