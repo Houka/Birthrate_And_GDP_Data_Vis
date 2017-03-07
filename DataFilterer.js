@@ -32,7 +32,7 @@ function combineData(year,birthData,GDPData,countryData){
 				country: countryName,
 				birthrate: birthYear,
 				gdp: GDPYear,
-				continent: countryObj[0],
+				continentcode: countryObj[0],
 				countrycode: countryObj[1]
 			};
 			result = result.concat([combinedObj]);
@@ -77,6 +77,7 @@ function convertDataNested(data){
 				children:[{
 					name: temp.countrycode,
 					size: temp.gdp,
+					region: temp.continentcode,
 					birthrate: temp.birthrate,
 				}]
 			};

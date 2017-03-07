@@ -3,6 +3,7 @@
 // - gdp per cap would be size of circles, sqrt scale
 // - birth rate would be color, 7-10 discrete colors
 // - big circles to contain continents for organization purposes
+
 function mapLocationX(countryName){
 	var x = Math.random()*screenWidth;
 	return x;
@@ -42,9 +43,8 @@ function displayCombinedData(combinedData, nestedCombinedData){
 	.domain(GDPExtent)
 	.range([5,100]);
 
-	
-
 	var g = svg.append("g");
+	var format = d3.format(",d");
 	var pack = d3.pack().size([screenWidth, screenHeight]);
 
 	var continent = nestedCombinedData;
@@ -58,6 +58,7 @@ function displayCombinedData(combinedData, nestedCombinedData){
 		pack(continent);
 
 		var node = g.selectAll(".node")
+		// .data(continent.descendants())
 		.data(continent.leaves())
 		.enter().append("g")
 		.attr("transform", function(d) {
@@ -89,7 +90,55 @@ function displayCombinedData(combinedData, nestedCombinedData){
 		});
 
 		node.append("title") 
-		.text(function(d){return d.data.name;})
-	//}
+		.attr("text-anchor", "middle")
+		.attr("fill", "black")
+		.text(function(d) { 
+			return d.data.name + "\n" + format(d.value); });
+
+
+		var node = g.selectAll(".node")
+		// .data(continent.descendants())
+		.filter(function(d) { d.data.region == "EU" })
+		.data(continent.leaves())
+		.enter().append("g")
+		.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+
+			/*var br = scaleBirthRate(+d.data.birthrate);
+			var gdp = scaleGDP(+d.data.size);*/
+
+		node.append("circle")
+			.attr("r", function(d) {return d.r;})
+			.style("fill", function(d) { return scaleBirthRate(+d.data.birthrate); });
+
+		node.append("title") 
+		.attr("text-anchor", "middle")
+		.attr("fill", "black")
+		.text(function(d) { 
+			return d.data.name + "\n" + format(d.value); });
+
+	var legendSize = d3.scaleOrdinal()
+	.domain(birthRateExtent)
+	.range(birthRateColors);
+
+	svg.append("g")
+	.attr("class", "legendOrdinal")
+	.attr("transform", "translate(50, 30)");
+
+	var legendOrdinal = d3.legendColor()
+	.title("Legend")
+	.shapeWidth(30)
+	.orient("vertical")
+	.scale(legendSize);
+
+	svg.select(".legendOrdinal")
+	.call(legendOrdinal);
 
 }
+
+
+
+
+
+
+
+
