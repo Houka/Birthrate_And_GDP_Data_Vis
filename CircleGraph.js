@@ -14,8 +14,15 @@ function mapLocationY(countryName){
 }
 
 function displayCombinedData(combinedData, nestedCombinedData){
-	console.log(combinedData);
-	console.log(nestedCombinedData);
+	console.log("hello");
+
+	var treeData = {
+		"name": "World",
+		"children": {
+
+		}
+	}
+
 	// Code in here
 	var svg = mainDiv.append("svg")
 	.attr("height", "100%")
@@ -31,8 +38,6 @@ function displayCombinedData(combinedData, nestedCombinedData){
 		var data = d.values[0];
 		return +data.gdp; 
 	});
-	
-	console.log(birthRateExtent);
 
 	var scaleBirthRate = d3.scaleOrdinal()
 	.domain(birthRateExtent)
@@ -42,8 +47,43 @@ function displayCombinedData(combinedData, nestedCombinedData){
 	.domain(GDPExtent)
 	.range([5,100]);
 
-	nestedCombinedData.forEach(function(d){
-		var continents = d.values;
+	for (continent in nestedCombinedData) {
+		/*svg.append("text")
+			.attr("x",cx)
+			.attr("y",cy)
+			.attr("text-anchor","middle")
+			.attr("alignment-baseline","middle")
+			.text("br: "+br+", gdp:"+gdp)
+			.attr("fill", TEXT_COLOR);*/
+
+		/*var pack = d3.pack();
+		var g = svg.append("g");
+
+		continent = d3.hierarchy(continent)
+					.sum(function(d) {
+						console.log(d);
+						return d;
+					});
+
+		console.log(continent);
+
+		pack(continent);
+
+		console.log(continent);
+
+		var node = g.selectAll(".node")
+					.data(continent.values)
+					.enter().append("g")
+					.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+
+		node.append("title")
+		.text(function(d) { return d.countrycode;});
+
+		node.append("circle")
+		.attr("r", scaleGDP(+d.gdp))
+		.style("fill", scaleBirthRate(+d.birthrate));*/
+
+
 		continents.forEach(function(d){
 			var data = d.values[0];
 			var cx = mapLocationX(data.country);
@@ -57,5 +97,5 @@ function displayCombinedData(combinedData, nestedCombinedData){
 			.attr("cy",cy)
 			.style("fill", br);
 		});
-	})
+	}
 }
