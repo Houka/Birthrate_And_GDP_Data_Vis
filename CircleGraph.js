@@ -14,12 +14,16 @@ function mapLocationY(countryName){
 }
 
 function displayCombinedData(combinedData, nestedCombinedData){
+	nestedCombinedData = {
+		name: "World",
+		children: nestedCombinedData
+	};
 	// Code in here
 	var svg = mainDiv.append("svg")
 	.attr("height", "100%")
 	.attr("width", "100%");
 
-	var birthRateColors = ['#ffffcc','#a1dab4','#41b6c4','#2c7fb8','#253494'];
+	var birthRateColors = ['#b2182b','#ef8a62','#fddbc7','#f7f7f7','#d1e5f0','#67a9cf','#2166ac'];
 
 	var birthRateExtent = d3.extent(combinedData, function(d) {	
 		var data = d.values[0];
@@ -38,56 +42,35 @@ function displayCombinedData(combinedData, nestedCombinedData){
 	.domain(GDPExtent)
 	.range([5,100]);
 
-	nestedCombinedData.forEach( function(continents){
-		console.log(continents.values);
-		/*svg.append("text")
-			.attr("x",cx)
-			.attr("y",cy)
-			.attr("text-anchor","middle")
-			.attr("alignment-baseline","middle")
-			.text("br: "+br+", gdp:"+gdp)
-			.attr("fill", TEXT_COLOR);*/
+	
 
-		/*var pack = d3.pack();
-		var g = svg.append("g");
+	var g = svg.append("g");
+	var pack = d3.pack().size([screenWidth, screenHeight]);
 
+	var continent = nestedCombinedData;
+	// if (continent.name == "AF") { 
+		g = g.attr("transform", "translate(2,2)"); // or whatever
 		continent = d3.hierarchy(continent)
-					.sum(function(d) {
-						console.log(d);
-						return d;
-					});
-
-		console.log(continent);
+		.sum(function(d) {
+			return d.size;
+		});
 
 		pack(continent);
 
-		console.log(continent);
-
 		var node = g.selectAll(".node")
-					.data(continent.values)
-					.enter().append("g")
-					.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+		.data(continent.descendants())
+		.enter().append("g")
+		.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 
-		node.append("title")
-		.text(function(d) { return d.countrycode;});
+			/*var br = scaleBirthRate(+d.data.birthrate);
+			var gdp = scaleGDP(+d.data.size);*/
 
 		node.append("circle")
-		.attr("r", scaleGDP(+d.gdp))
-		.style("fill", scaleBirthRate(+d.birthrate));*/
+		.attr("r", function(d) {return d.r;})
+		.style("fill", function(d) {return scaleBirthRate(+d.data.birthrate)});
 
+		node.append("title") 
+		.text(function(d){return d.data.name;})
+	//}
 
-		continents.values.forEach(function(d){
-			var data = d.values[0];
-			var cx = mapLocationX(data.country);
-			var cy = mapLocationY(data.country);
-			var br = scaleBirthRate(+data.birthrate);
-			var gdp = scaleGDP(+data.gdp);
-
-			svg.append("circle")
-			.attr("r", gdp)
-			.attr("cx",cx)
-			.attr("cy",cy)
-			.style("fill", br);
-		});
-	});
 }
