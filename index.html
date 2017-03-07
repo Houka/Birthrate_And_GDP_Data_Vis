@@ -55,7 +55,7 @@
 						   rawCountryData) {
 			filterData(GDPData,2);
 			var combinedData = combineData(1999, birthData, GDPData, rawCountryData);
-			displayCombinedData(combineData, convertData(combineData));
+			displayCombinedData(convertData(combinedData), convertDataNested(combinedData));
 		});
 
 		/* Loads and parses the data files and then supplies the callback with the data in a easy to use form*/

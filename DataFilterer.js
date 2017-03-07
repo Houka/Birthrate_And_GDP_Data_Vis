@@ -48,12 +48,23 @@ function combineData(year,birthData,GDPData,countryData){
 function convertData(data){
 	var convertedData = d3.nest()
 		.key(function(d) {
+			return d.country; 
+		})
+		.entries(data);
+	return convertedData;
+}
+
+/* Returns the data set but converted to a double nested specification
+*/
+function convertDataNested(data){
+	var convertedData = d3.nest()
+		.key(function(d) {
 			return d.continent; 
 		})
 		.key(function(d){
 			return d.country;
 		})
-		.entries(result);
+		.entries(data);
 	return convertedData;
 }
 
