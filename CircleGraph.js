@@ -44,11 +44,9 @@ function displayCombinedData(combinedData, nestedCombinedData){
 	.range([5,100]);
 
 	var g = svg.append("g");
-	var format = d3.format(",d");
 	var pack = d3.pack().size([screenWidth, screenHeight]);
 
 	var continent = nestedCombinedData;
-	// if (continent.name == "AF") { 
 		g = g.attr("transform", "translate("+screenWidth/-4+",2)"); // or whatever
 		continent = d3.hierarchy(continent)
 		.sum(function(d) {
@@ -58,60 +56,22 @@ function displayCombinedData(combinedData, nestedCombinedData){
 		pack(continent);
 
 		var node = g.selectAll(".node")
-		// .data(continent.descendants())
-		.filter(function(d) { d.data.region == "AF" })
 		.data(continent.leaves())
 		.enter().append("g")
 		.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-
-			/*var br = scaleBirthRate(+d.data.birthrate);
-			var gdp = scaleGDP(+d.data.size);*/
-
-
-		node.append("circle")
-		.attr("r", function(d) {return d.r;})
-		.style("fill", function(d) {
-			if (d.data.birthrate)
-				return scaleBirthRate(+d.data.birthrate);
-			else
-				return "white";
-		})
-		.style("stroke", function(d) {
-			if (d.data.birthrate || d.data.name == "World") 
-				return "none";
-			else 
-				return "#ccc";
-		});
-
-		node.append("title") 
-		.attr("text-anchor", "middle")
-		.attr("fill", "black")
-		.text(function(d) { 
-			return d.data.name + "\n" + format(d.value); });
-
-
-		var node = g.selectAll(".node")
-		// .data(continent.descendants())
-		.filter(function(d) { d.data.region == "EU" })
-		.data(continent.leaves())
-		.enter().append("g")
-		.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-
-			/*var br = scaleBirthRate(+d.data.birthrate);
-			var gdp = scaleGDP(+d.data.size);*/
 
 		node.append("circle")
 			.attr("r", function(d) {return d.r;})
 			.style("fill", function(d) { return scaleBirthRate(+d.data.birthrate); });
 
-		node.append("title") 
+		node.append("text") 
 		.attr("text-anchor", "middle")
 		.attr("fill", "black")
 		.text(function(d) { 
-			return d.data.name + "\n" + format(d.value); });
+			return d.data.name ; });
 
 	var legendSize = d3.scaleOrdinal()
-	.domain(birthRateExtent)
+	.domain(d3.range(birthRateColors.length).map(function(i) { return "q" + i + "-9"}))
 	.range(birthRateColors);
 
 	svg.append("g")
