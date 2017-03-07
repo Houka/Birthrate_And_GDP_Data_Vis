@@ -59,13 +59,13 @@ function convertData(data){
 function convertDataNested(data){
 	var convertedData = d3.nest()
 		.key(function(d) {
-			return d.continent; 
+			return d.continentcode; 
 		})
 		.key(function(d){
 			return d.country;
 		})
 		.entries(data);
-
+		
 	var result = [];
 	convertedData.forEach(function(d){
 		var nestedValues = [];

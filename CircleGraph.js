@@ -60,8 +60,6 @@ function displayCombinedData(combinedData, nestedCombinedData){
 			return "translate(" + d.x + "," + d.y + ")"; 
 	});
 
-	console.log(continent.leaves());
-
 	node.append("circle")
 	.attr("r", function(d) {return d.r;})
 	.style("fill", function(d) {
@@ -75,11 +73,11 @@ function displayCombinedData(combinedData, nestedCombinedData){
 
 	node.append("text") 
 	.attr("text-anchor", "middle")
+	.attr("alignment-baseline", "middle")
 	.attr("fill", "black")
 	.text(function(d) { 
 		return d.data.name; 
 	});
-
 
 	var legendSize = d3.scaleOrdinal()
 	.domain(birthRateExtent)
