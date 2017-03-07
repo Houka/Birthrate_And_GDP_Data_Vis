@@ -13,11 +13,13 @@ function mapLocationY(countryName){
 	return y;
 }
 
-function displayCombinedData(combinedData){
+function displayCombinedData(combinedData, nestedCombinedData){
+	console.log(combinedData);
+	console.log(nestedCombinedData);
 	// Code in here
 	var svg = mainDiv.append("svg")
-				.attr("height", "100%")
-				.attr("width", "100%");
+	.attr("height", "100%")
+	.attr("width", "100%");
 
 	var birthRateColors = ['#ffffcc','#a1dab4','#41b6c4','#2c7fb8','#253494'];
 
@@ -29,40 +31,31 @@ function displayCombinedData(combinedData){
 		var data = d.values[0];
 		return +data.gdp; 
 	});
+	
+	console.log(birthRateExtent);
 
 	var scaleBirthRate = d3.scaleOrdinal()
-		.domain(birthRateExtent)
-		.range(birthRateColors);
+	.domain(birthRateExtent)
+	.range(birthRateColors);
 
 	var scaleGDP = d3.scaleSqrt()
-		.domain(GDPExtent)
-		.range([5,100]);
+	.domain(GDPExtent)
+	.range([5,100]);
 
-	combinedData.forEach(function(d){
-		var data = d.values[0];
+	nestedCombinedData.forEach(function(d){
+		var continents = d.values;
+		continents.forEach(function(d){
+			var data = d.values[0];
+			var cx = mapLocationX(data.country);
+			var cy = mapLocationY(data.country);
+			var br = scaleBirthRate(+data.birthrate);
+			var gdp = scaleGDP(+data.gdp);
 
-		// constant vars
-		var CIRCLE_COLOR = "red";
-		var TEXT_COLOR = "#ccc"
-
-		// dynamic vars
-		var cx = mapLocationX(data.country);
-		var cy = mapLocationY(data.country);
-		var br = scaleBirthRate(+data.birthrate);
-		var gdp = scaleGDP(+data.gdp);
-
-		svg.append("circle")
+			svg.append("circle")
 			.attr("r", gdp)
 			.attr("cx",cx)
 			.attr("cy",cy)
 			.style("fill", br);
-		
-		/*svg.append("text")
-			.attr("x",cx)
-			.attr("y",cy)
-			.attr("text-anchor","middle")
-			.attr("alignment-baseline","middle")
-			.text("br: "+br+", gdp:"+gdp)
-			.attr("fill", TEXT_COLOR);*/
+		});
 	})
 }
