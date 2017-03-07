@@ -7,32 +7,35 @@
 
 var birthRateColors =['#f7bba6','#ed8495','#e05286','#a73b8f','#6f2597','#511b75','#37114e'];
 var continentLocations = {
-	AF:{x:200, y:200},
-	AS:{x:500, y:100}, 
-	EU:{x:200, y:-200}, 
-	NA:{x:-400, y:100}, 
-	SA:{x:-500, y:100}, 
-	OC:{x:300, y:300}, 
-	AN:{x:-100, y:-100}
-};
+	NA:{x:screenWidth*.2, y:screenHeight*.4}, 
+	SA:{x:screenWidth*.2, y:screenHeight*.7}, 
+	EU:{x:screenWidth*.6, y:screenHeight*.3}, 
+	AF:{x:screenWidth*.6, y:screenHeight*.7},
+	AS:{x:screenWidth*.8, y:screenHeight*.5}, 
+	OC:{x:screenWidth*.9, y:screenHeight*.9}, 
+	AN:{x:800, y:100}
+};	// uses svg absolute coordinates (i.e. (0,0) is top left corner)
 
 /* Returns how much counrty circles should be translated based on the continent.
 	translates all circles within the continent circle by the same amount
 */
 function translateCountries(d) {
-	if (!d.parent.parent) return "translate(" + d.x + "," + d.y + ")"; 
+	var continent = d.parent.parent;
+	if (!continent) return "translate(" + d.x + "," + d.y + ")"; 
 
-	var countinentName = d.parent.parent.data.name;
-	return "translate(" + (d.x+continentLocations[countinentName].x) + 
-				"," + (d.y+continentLocations[countinentName].y) + ")";
+	var continenttName = continent.data.name;
+	var x = (d.x+continentLocations[continenttName].x - continent.x),
+		y = (d.y+continentLocations[continenttName].y - continent.y);
+	return "translate(" + x + "," + y + ")";
 }
 
 /* Returns how much a continent circle should be translated based on the continent.
 */
 function translateContinent(d) {
-	var countinentName = d.data.name;
-	return "translate(" + (d.x+continentLocations[countinentName].x) + 
-				"," + (d.y+continentLocations[countinentName].y) + ")";
+	var continenttName = d.data.name;
+	var x = (continentLocations[continenttName].x),
+		y = (continentLocations[continenttName].y);
+	return "translate(" + x + "," + y + ")";
 }
 
 function displayCombinedData(combinedData, nestedCombinedData){
