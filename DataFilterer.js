@@ -65,7 +65,7 @@ function convertDataNested(data){
 			return d.country;
 		})
 		.entries(data);
-
+		
 	var result = [];
 	convertedData.forEach(function(d){
 		var nestedValues = [];

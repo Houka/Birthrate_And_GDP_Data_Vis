@@ -4,15 +4,8 @@
 // - birth rate would be color, 7-10 discrete colors
 // - big circles to contain continents for organization purposes
 
-function mapLocationX(countryName){
-	var x = Math.random()*screenWidth;
-	return x;
-}
 
-function mapLocationY(countryName){
-	var y = Math.random()*screenHeight;
-	return y;
-}
+var birthRateColors =['#f7bba6','#ed8495','#e05286','#a73b8f','#6f2597','#511b75','#37114e'];
 
 function displayCombinedData(combinedData, nestedCombinedData){
 	nestedCombinedData = {
@@ -23,8 +16,6 @@ function displayCombinedData(combinedData, nestedCombinedData){
 	var svg = mainDiv.append("svg")
 	.attr("height", "100%")
 	.attr("width", "100%");
-
-	var birthRateColors =['#f7bba6','#ed8495','#e05286','#a73b8f','#6f2597','#511b75','#37114e'];
 
 	var birthRateExtent = d3.extent(combinedData, function(d) {	
 		var data = d.values[0];
@@ -44,34 +35,79 @@ function displayCombinedData(combinedData, nestedCombinedData){
 	.range([5,100]);
 
 	var g = svg.append("g");
-	var pack = d3.pack().size([screenWidth, screenHeight]);
+	var format = d3.format(",d");
+	var pack = d3.pack().size([screenWidth, screenHeight]).padding(0.5);
 
 	var continent = nestedCombinedData;
-		g = g.attr("transform", "translate("+screenWidth/-4+",2)"); // or whatever
-		continent = d3.hierarchy(continent)
-		.sum(function(d) {
-			return d.size;
-		});
 
-		pack(continent);
+	continent = d3.hierarchy(continent)
+	.sum(function(d) {
+		return d.size;
+	});
 
-		var node = g.selectAll(".node")
-		.data(continent.leaves())
-		.enter().append("g")
-		.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+	pack(continent);
 
-		node.append("circle")
-			.attr("r", function(d) {return d.r;})
-			.style("fill", function(d) { return scaleBirthRate(+d.data.birthrate); });
+	var node = g.selectAll(".node")
+	.data(continent.leaves())
+	.enter().append("g")
+	.attr("transform", function(d) {
+		// make this into a function, switch case on continent code
+		// translates all circles within the continent circle by the same amount
+		if ((d.parent.parent) && d.parent.parent.data.name == "AF") {
+			return "translate(" + (d.x + 300) + "," + d.y + ")"; 
+		}
+		else
+			return "translate(" + d.x + "," + d.y + ")"; 
+	});
 
-		node.append("text") 
-		.attr("text-anchor", "middle")
-		.attr("fill", "black")
-		.text(function(d) { 
-			return d.data.name ; });
+	// add circles for continent
+	continent.children.forEach(function(continent) {
+		var continentG = g.append("g");
+
+		continentG.append("circle")
+		.attr("r", continent.r)
+		.style("stroke", "#ccc")
+		.style("fill", "none");
+
+		// same concept as translating colored circles
+		if (continent.data.name == "AF") {
+			continentG.attr("transform", "translate(" + (continent.x + 300) + "," + continent.y + ")")
+		}
+	});
+
+	node.append("circle")
+	.attr("r", function(d) {return d.r;})
+	.style("fill", function(d) {
+		if (d.data.birthrate){
+			return scaleBirthRate(+d.data.birthrate);
+		}
+		else {
+			return "white";
+		}
+	});
+
+	node.append("text") 
+	.attr("text-anchor", "middle")
+	.attr("alignment-baseline", "middle")
+	.attr("fill", "black")
+	.text(function(d) { 
+		return d.data.name; 
+	});
+
+	/* Create a legend */
+
+	var birthrateArray = []
+	for (var i = 0; i < continent.leaves().length; i++) {
+		birthrateArray.push(continent.leaves()[i].data.birthrate)
+	}
 
 	var legendSize = d3.scaleOrdinal()
-	.domain(d3.range(birthRateColors.length).map(function(i) { return "q" + i + "-9"}))
+	.domain(d3.range(birthRateColors.length).map(function(i) { 
+		var maxBirthRate = Math.max.apply(null, birthrateArray);
+
+		return (Math.round((maxBirthRate/birthRateColors.length)*i*100)/100) + " to " 
+			+ (Math.round((maxBirthRate/birthRateColors.length)*(i+1)*100)/100)
+	}))
 	.range(birthRateColors);
 
 	svg.append("g")
@@ -80,7 +116,7 @@ function displayCombinedData(combinedData, nestedCombinedData){
 
 	var legendOrdinal = d3.legendColor()
 	.title("Legend")
-	.shapeWidth(30)
+	.shapeWidth(50)
 	.orient("vertical")
 	.scale(legendSize);
 
