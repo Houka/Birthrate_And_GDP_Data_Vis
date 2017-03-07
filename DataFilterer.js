@@ -73,7 +73,7 @@ function convertDataNested(data){
 function countEmptyStrings(array){
 	var c = 0;
 	array.forEach(function(d){
-		if (d)
+		if (!d)
 			c++;
 	})
 	return c;
@@ -85,14 +85,37 @@ function countEmptyStrings(array){
 */
 function filterData(data, threshold){
 	var result = [];
-	var c = 0;
+	var d = true;
 	for(var i = 0; i<data.length; i++){
 		var valueObj = data[i].values[0];
 		var values = Object.values(valueObj);
+		values = values.slice(0,-6);
 
 		if (countEmptyStrings(values) <= threshold)
-			c++;
+			result = result.concat([data[i]]);
 	}
-	console.log(c);
-	console.log(data.length);
+	return result
+}
+
+/* Returns both data sets, but capped such that only 
+	countries that are in both dataset will be in the final
+	datasets
+*/
+function filterDatasets(data1, data2){
+	var result1 = [];
+	var result2 = [];
+
+	var largerDataset = data1.length > data2.length? data1:data2;
+	var smallerDataset = data1.length > data2.length? data2:data1;
+
+	for (var i=0; i < largerDataset.length; i++){
+		for (var j=0; j < smallerDataset.length; j++){
+			if (largerDataset[i].key == smallerDataset[j].key){
+				result1 = result1.concat([largerDataset[i]]);
+				result2 = result2.concat([smallerDataset[j]]);
+			}
+		}
+	}
+
+	return [result1, result2]
 }
