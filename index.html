@@ -21,15 +21,18 @@
 
 	<script>
 		var debug = false;
-		var footerOffset = 30;
+		var footerOffset = 30, sideOffset = 15;
 		var mainDiv = d3.select("#visualization");
+		var screenHeight = window.innerHeight - footerOffset;
+		var screenWidth = window.innerWidth - sideOffset;
 
 		// code for debugs
 		if (debug) 
 			mainDiv.style("border", "1px solid black");
 
 		// set height to window height
-		mainDiv.style("height", window.innerHeight - footerOffset);
+		mainDiv.style("height", screenHeight);
+		mainDiv.style("width", screenWidth);
 
 	</script>
 
