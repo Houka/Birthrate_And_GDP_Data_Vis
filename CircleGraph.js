@@ -14,15 +14,6 @@ function mapLocationY(countryName){
 }
 
 function displayCombinedData(combinedData, nestedCombinedData){
-	console.log("hello");
-
-	var treeData = {
-		"name": "World",
-		"children": {
-
-		}
-	}
-
 	// Code in here
 	var svg = mainDiv.append("svg")
 	.attr("height", "100%")
@@ -47,7 +38,8 @@ function displayCombinedData(combinedData, nestedCombinedData){
 	.domain(GDPExtent)
 	.range([5,100]);
 
-	for (continent in nestedCombinedData) {
+	nestedCombinedData.forEach( function(continents){
+		console.log(continents.values);
 		/*svg.append("text")
 			.attr("x",cx)
 			.attr("y",cy)
@@ -84,7 +76,7 @@ function displayCombinedData(combinedData, nestedCombinedData){
 		.style("fill", scaleBirthRate(+d.birthrate));*/
 
 
-		continents.forEach(function(d){
+		continents.values.forEach(function(d){
 			var data = d.values[0];
 			var cx = mapLocationX(data.country);
 			var cy = mapLocationY(data.country);
@@ -97,5 +89,5 @@ function displayCombinedData(combinedData, nestedCombinedData){
 			.attr("cy",cy)
 			.style("fill", br);
 		});
-	}
+	});
 }
