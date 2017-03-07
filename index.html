@@ -7,13 +7,13 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.21.0/d3-legend.min.js"></script>
 	<style>
 		div { font-family: 'Montserrat', sans-serif; background-color: #ffffff}
-		svg { border: solid #ccc 1px; }
+		svg { border: solid #ccc 1px; background-image: url("worldmap.png"); background-size: 100% 100%; background-color: #4b76bc;}
 		text { font-size: 7pt; fill: #ccc; }
 	</style>
 </head>
 <body>
 	<div id="visualization" style="width: 100%;">
-		Source: http://data.worldbank.org, http://country.io/data/
+		Sources: http://data.worldbank.org, http://country.io/data/
 	</div>
 
 	<script>
@@ -30,7 +30,7 @@
 			mainDiv.style("border", "1px solid black");
 
 		// set height to window height
-		mainDiv.style("height", screenHeight);
+		mainDiv.style("height", screenHeight + 50);
 		mainDiv.style("width", screenWidth);
 
 	</script>
