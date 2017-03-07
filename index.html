@@ -114,8 +114,8 @@
 		function parseCombined(line) {
 			return {
 				country: line.country,
-				birthrate: line.birthrate,
-				gdp: line.gdppercap
+				birthrate: +line.birthrate,
+				gdp: +line.gdppercap
 			}
 		}
 
