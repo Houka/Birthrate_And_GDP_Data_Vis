@@ -12,7 +12,7 @@ var continentLocations = {
 	EU:{x:screenWidth*.6, y:screenHeight*.3}, 
 	AF:{x:screenWidth*.6, y:screenHeight*.7},
 	AS:{x:screenWidth*.8, y:screenHeight*.5}, 
-	OC:{x:screenWidth*.9, y:screenHeight*.9}, 
+	OC:{x:screenWidth*.85, y:screenHeight*.8}, 
 	AN:{x:800, y:100}
 };	// uses svg absolute coordinates (i.e. (0,0) is top left corner)
 
