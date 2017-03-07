@@ -65,7 +65,34 @@ function convertDataNested(data){
 			return d.country;
 		})
 		.entries(data);
-	return convertedData;
+
+	var result = [];
+	convertedData.forEach(function(d){
+		var nestedValues = [];
+		d.values.forEach(function(dd){
+			var temp = dd.values[0];
+			
+			var nestedObj = {
+				name:temp.country,
+				children:[{
+					name: temp.countrycode,
+					size: temp.gdp,
+					birthrate: temp.birthrate,
+				}]
+			};
+
+			nestedValues = nestedValues.concat([nestedObj]);
+		})
+
+		var obj = {
+			name: d.key,
+			children: nestedValues
+		};
+
+		result = result.concat([obj]);
+	});
+
+	return result;
 }
 
 /* Returns the number of times an empty string is found in the array
