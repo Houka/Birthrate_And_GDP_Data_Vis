@@ -7,7 +7,7 @@
 	<script src="http://d3js.org/topojson.v2.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.21.0/d3-legend.min.js"></script>
 </head>
-<body>
+<body onresize="setScreenResolution()">
 	<h1>
 		<span id="selector" style="color:#333;">GDP vs Birth Rates in World Countries [</span>]
 	</h1>
@@ -40,9 +40,16 @@
 			mainDiv.style("border", "1px solid black");
 
 		// set height to window height
-		mainDiv
-			.style("height", screenHeight + footerOffset)
-			.style("width", "100%");
+		function setScreenResolution(){
+			widthScale = 1500/window.innerWidth;
+			screenHeight = 700 / widthScale;
+			screenWidth = 1500 / widthScale;
+			mainDiv
+				.style("height", screenHeight + footerOffset)
+				.style("width", "100%");
+			
+			onchange();
+		}
 
 		// add selector to header for selecting years
 		var years = d3.range(2016-1960).map(function(i){return i+1960});
@@ -58,6 +65,8 @@
 			var year = selectValue = d3.select('.select').property('value');
 			computeForYear(year);
 		}
+		
+		setScreenResolution();
 	</script>
 
 	<script src = "CircleGraph.js"></script>
