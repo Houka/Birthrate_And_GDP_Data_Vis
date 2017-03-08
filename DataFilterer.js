@@ -6,6 +6,7 @@ function isValidCountryName(countryName, countryData){
 	return true;
 }
 
+
 /* Returns Combination of all 3 data structures into one array of country object.
 	A country object for example may be:
 	{
@@ -43,6 +44,7 @@ function combineData(year,birthData,GDPData,countryData){
 	return result;
 }
 
+
 /* Returns the data set but converted to a nested specification
 */
 function convertData(data){
@@ -53,6 +55,7 @@ function convertData(data){
 		.entries(data);
 	return convertedData;
 }
+
 
 /* Returns the data set but converted to a double nested specification
 */
@@ -96,6 +99,7 @@ function convertDataNested(data){
 	return result;
 }
 
+
 /* Returns the number of times an empty string is found in the array
 */
 function countEmptyStrings(array){
@@ -107,11 +111,12 @@ function countEmptyStrings(array){
 	return c;
 }
 
+
 /* Returns a filtered array of data objects based off data
 	A data object will be filtered out if it crosses the threshold of not containing 
 	enough information (i.e. birthrate or gdp) in all the catagories
 */
-function filterData(data, threshold){
+function filterDataByThreshold(data, threshold){
 	var result = [];
 	var d = true;
 	for(var i = 0; i<data.length; i++){
@@ -124,6 +129,23 @@ function filterData(data, threshold){
 	}
 	return result
 }
+
+
+/* Returns a filtered array of data objects based off data
+	A data object will be filtered out if at that year, it does not have data
+*/
+function filterDataByYear(data, year){
+	var result = [];
+	var d = true;
+	for(var i = 0; i<data.length; i++){
+		var valueObj = data[i].values[0];
+
+		if (valueObj[year])
+			result = result.concat([data[i]]);
+	}
+	return result
+}
+
 
 /* Returns both data sets, but capped such that only 
 	countries that are in both dataset will be in the final

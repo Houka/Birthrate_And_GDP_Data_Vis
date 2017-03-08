@@ -117,7 +117,6 @@ function displayCombinedData(combinedData, nestedCombinedData){
 	.attr("alignment-baseline", "middle")
 	.attr("fill", "black")
 	.text(function(d) { 
-		console.log(d);
 		return d.data.name; 
 	});
 

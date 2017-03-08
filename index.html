@@ -6,12 +6,14 @@
 	<script src="http://d3js.org/topojson.v2.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.21.0/d3-legend.min.js"></script>
 	<style>
-		div { font-family: 'Montserrat', sans-serif; background-color: #ffffff}
+		h1 {font-family: 'Montserrat', sans-serif; text-align: center; color:#333;}
+		div { font-family: 'Montserrat', sans-serif; background-color: #ffffff; color:#ccc;}
 		svg { border: solid #ccc 1px; background-image: url("worldmap.png"); background-size: 100% 100%; background-color: #4b76bc;}
 		text { font-size: 7pt; fill: #ccc; }
 	</style>
 </head>
 <body>
+	<h1></h1>
 	<div id="visualization" style="width: 100%;">
 		Sources: http://data.worldbank.org, http://country.io/data/
 	</div>
@@ -24,6 +26,7 @@
 		var mainDiv = d3.select("#visualization");
 		var screenHeight = window.innerHeight - footerOffset;
 		var screenWidth = window.innerWidth - sideOffset;
+		var year = 1999, threshold = 2;
 
 		// code for debugs
 		if (debug) 
@@ -32,6 +35,8 @@
 		// set height to window height
 		mainDiv.style("height", screenHeight + 50);
 		mainDiv.style("width", screenWidth);
+
+		d3.select("h1").text("GDP vs Birth Rates in World Countries ("+year+")")
 
 	</script>
 
@@ -47,9 +52,9 @@
 		/* Load the csv data files and then runs a callback to display the data
 		*/
 		loadData(function(birthData, GDPData, rawCountryData) {
-			// filter data by a threshold
-			birthData = filterData(birthData,2);
-			GDPData = filterData(GDPData,2);
+			// filter data
+			birthData = filterDataByYear(birthData,year);
+			GDPData = filterDataByYear(GDPData,year);
 
 			// cap data so only countries that appear in both dataset will be included
 			var cappedDatasets = filterDatasets(birthData, GDPData);
@@ -57,7 +62,7 @@
 			GDPData = cappedDatasets[1];
 
 			// combine datasets into one array and display the data
-			var combinedData = combineData(2014, birthData, GDPData, rawCountryData);
+			var combinedData = combineData(year, birthData, GDPData, rawCountryData);
 			displayCombinedData(convertData(combinedData), convertDataNested(combinedData));
 		});
 
