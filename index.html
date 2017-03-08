@@ -7,7 +7,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.21.0/d3-legend.min.js"></script>
 	<style>
 		h1 {font-family: 'Montserrat', sans-serif; text-align: center; color:#333;}
-		div { font-family: 'Montserrat', sans-serif; background-color: #ffffff; color:#ccc;}
+		div { font-family: 'Montserrat', sans-serif; background-color: #ffffff; color:#ccc; text-align: center}
 		svg { border: solid #ccc 1px; background-image: url("worldmap.png"); background-size: 100% 100%; background-color: #4b76bc;}
 		text { fill: white; }
 		.labels { font-size: 5pt; opacity: 0.3}
@@ -25,8 +25,8 @@
 		var debug = false;
 		var footerOffset = 30, sideOffset = 15;
 		var mainDiv = d3.select("#visualization");
-		var screenHeight = window.innerHeight - footerOffset;
-		var screenWidth = window.innerWidth - sideOffset;
+		var screenHeight = 700;
+		var screenWidth = 1500;
 		var year = 1999, threshold = 2;
 
 		// code for debugs
@@ -35,7 +35,7 @@
 
 		// set height to window height
 		mainDiv.style("height", screenHeight + 50);
-		mainDiv.style("width", screenWidth);
+		mainDiv.style("width", "100%");
 
 		d3.select("h1").text("GDP vs Birth Rates in World Countries ("+year+")")
 
