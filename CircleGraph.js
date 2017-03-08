@@ -4,7 +4,7 @@
 // - birth rate would be color, 7-10 discrete colors
 // - big circles to contain continents for organization purposes
 
-var SCALE_CIRCLES = 1.3;
+var SCALE_CIRCLES = 1.2;
 
 var birthRateColors =['#f7bba6','#ed8495','#e05286','#a73b8f','#6f2597','#511b75','#37114e'];
 var continentLocations = {
@@ -16,8 +16,6 @@ var continentLocations = {
 	OC:{x:screenWidth*.8, y:screenHeight*.75}, 
 	AN:{x:800, y:100}
 };	// uses svg absolute coordinates (i.e. (0,0) is top left corner)
-var minCircleRadius = 5,
-	maxCircleRadius = 100;
 
 /* Returns how much counrty circles should be translated based on the continent.
 	translates all circles within the continent circle by the same amount
