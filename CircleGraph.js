@@ -6,7 +6,7 @@
 
 var SCALE_CIRCLES = 1.2;
 
-var birthRateColors =['#f7bba6','#ed8495','#e05286','#a73b8f','#6f2597','#511b75','#37114e'];
+var birthRateColors =['#f7bba6','#ed8495','#e05286','#a73b8f','#6f2597','#511b75','#37114e'].reverse();
 var continentLocations = {
 	NA:{x:screenWidth*.2, y:screenHeight*.4}, 
 	SA:{x:screenWidth*.2, y:screenHeight*.7}, 
@@ -90,10 +90,23 @@ function displayCombinedData(combinedData, nestedCombinedData){
 	continent.children.forEach(function(continent) {
 		g.append("g").append("circle")
 		.attr("r", continent.r)
-		.style("stroke", "#ccc")
+		.style("stroke", "#aaa")
 		.style("fill", "none")
-		.attr("transform", "scale("+ 0.5 + ")")
 		.attr("transform", transformContinent(continent));
+
+		g.append("g").append("circle")
+		.attr("r", 10)
+		.style("fill", "#111")
+		.style("stroke", "#aaa")
+		.attr("transform", transformContinent(continent) + "translate(" + continent.r/Math.sqrt(2) + "," + continent.r/Math.sqrt(2) + ")");
+
+		g.append("g").append("text")
+		.text(continent.data.name)
+		.style("alignment-baseline", "middle")
+		.style("text-anchor", "middle")
+		.style("fill", "#ccc")
+		.style("font-size", "8px")
+		.attr("transform", transformContinent(continent) + "translate(" + continent.r/Math.sqrt(2) + "," + continent.r/Math.sqrt(2) + ")");
 	});
 
 	// add country circles filled with color based on birthrate and radius based on gdp
@@ -112,7 +125,6 @@ function displayCombinedData(combinedData, nestedCombinedData){
 	node.append("text").attr("class", "labels")
 	.attr("text-anchor", "middle")
 	.attr("alignment-baseline", "middle")
-	.attr("fill", "black")
 	.text(function(d) { 
 		return d.data.name; 
 	});
