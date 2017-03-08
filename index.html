@@ -8,9 +8,9 @@
 	<style>
 		h1 {font-family: 'Montserrat', sans-serif; text-align: center; color:#333;}
 		div { font-family: 'Montserrat', sans-serif; background-color: #ffffff; color:#ccc;}
-		svg { border: solid #ccc 1px; background-image: url("worldmap.png"); background-size: 100% 100%; background-color: #4b76bc;}
+		svg { border: solid #ccc 1px; background-image: url("worldmap.png"); background-size: 100% 100%; background-color: #111;}
 		text { fill: white; }
-		.labels { font-size: 5pt; opacity: 0.3}
+		.labels { font-size: 5pt; opacity: 0.5; fill: #fff;}
 	</style>
 </head>
 <body>
@@ -25,8 +25,8 @@
 		var debug = false;
 		var footerOffset = 30, sideOffset = 15;
 		var mainDiv = d3.select("#visualization");
-		var screenHeight = window.innerHeight - footerOffset;
-		var screenWidth = window.innerWidth - sideOffset;
+		var screenHeight = window.innerHeight - footerOffset // 706;
+		var screenWidth = window.innerWidth - sideOffset // 1521;
 		var year = 1999, threshold = 2;
 
 		// code for debugs
