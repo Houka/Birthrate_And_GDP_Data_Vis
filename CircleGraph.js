@@ -140,22 +140,49 @@ function displayCombinedData(combinedData, nestedCombinedData){
 /* Creates and draws the color legend based on the coloring and birthrates
 */
 function displayLegend(combinedData){
+	// scale functions
 	var scaleBirthRate = getBirthRateScale(combinedData);
-	var legendOrdinal = d3.legendColor()
+	var GDPExtent = d3.extent(combinedData, function(d) { 
+ 		var data = d.values[0];
+ 		return +(+data.gdp).toFixed(2); 
+ 	});
+ 	console.log(GDPExtent);
+ 	var scaleGDP = d3.scaleOrdinal()
+		.domain(GDPExtent)
+		.range(GDPExtent);
+
+	// legends
+	var birthrateLegendOrdinal = d3.legendColor()
 		.title("Birth Rates (Births Per Woman)")
 		.shapeWidth(30)
     	.labels(d3.legendHelpers.thresholdLabels)
     	.labelFormat(d3.format(".2f"))
 		.orient("vertical")
 		.scale(scaleBirthRate);
+	var GDPLegendOrdinal = d3.legendColor()
+		.title("GDP per capita (USD)")
+		.shapeWidth(10)
+    	.labels(["Largest radius = $"+GDPExtent[0],"Smallest radius = $"+GDPExtent[1]])
+    	.labelFormat(d3.format(".2f"))
+		.orient("vertical")
+		.scale(scaleGDP);
 
 	// add and draw legend
-	d3.select("svg").append("g")
-		.attr("class", "legendOrdinal")
+	// GDP per capita = radius (USD)
+	var svg = d3.select("svg");
+	svg.append("g")
+		.attr("class", "birthrateLegendOrdinal")
 		.attr("transform", " scale("+1/widthScale+", "+1/widthScale+"), "+
 				"translate("+screenWidth*.005+", "+screenHeight*.05+")");
-	d3.select(".legendOrdinal")
-		.call(legendOrdinal);
+	var brLegend = d3.select(".birthrateLegendOrdinal")
+		.call(birthrateLegendOrdinal);
+
+	svg.append("g")
+		.attr("class", "GDPLegendOrdinal")
+		.attr("transform", " scale("+1/widthScale+", "+1/widthScale+"), "+
+				"translate("+(brLegend.node().getBBox().width+20)+", "+screenHeight*.05+")");
+	d3.select(".GDPLegendOrdinal")
+		.call(GDPLegendOrdinal);
 }
 
 
