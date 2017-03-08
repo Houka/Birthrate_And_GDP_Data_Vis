@@ -4,15 +4,16 @@
 // - birth rate would be color, 7-10 discrete colors
 // - big circles to contain continents for organization purposes
 
+var SCALE_CIRCLES = 1.3;
 
 var birthRateColors =['#f7bba6','#ed8495','#e05286','#a73b8f','#6f2597','#511b75','#37114e'];
 var continentLocations = {
 	NA:{x:screenWidth*.2, y:screenHeight*.4}, 
 	SA:{x:screenWidth*.2, y:screenHeight*.7}, 
-	EU:{x:screenWidth*.6, y:screenHeight*.3}, 
-	AF:{x:screenWidth*.6, y:screenHeight*.7},
-	AS:{x:screenWidth*.8, y:screenHeight*.5}, 
-	OC:{x:screenWidth*.85, y:screenHeight*.8}, 
+	EU:{x:screenWidth*.55, y:screenHeight*.35}, 
+	AF:{x:screenWidth*.5, y:screenHeight*.8},
+	AS:{x:screenWidth*.81, y:screenHeight*.3}, 
+	OC:{x:screenWidth*.8, y:screenHeight*.75}, 
 	AN:{x:800, y:100}
 };	// uses svg absolute coordinates (i.e. (0,0) is top left corner)
 var minCircleRadius = 5,
@@ -21,7 +22,7 @@ var minCircleRadius = 5,
 /* Returns how much counrty circles should be translated based on the continent.
 	translates all circles within the continent circle by the same amount
 */
-function translateCountries(d) {
+function transformCountries(d) {
 	var continent = d.parent.parent;
 	if (!continent) return "translate(" + d.x + "," + d.y + ")"; 
 
@@ -33,7 +34,7 @@ function translateCountries(d) {
 
 /* Returns how much a continent circle should be translated based on the continent.
 */
-function translateContinent(d) {
+function transformContinent(d) {
 	var continenttName = d.data.name;
 	var x = (continentLocations[continenttName].x),
 		y = (continentLocations[continenttName].y);
@@ -59,9 +60,6 @@ function displayCombinedData(combinedData, nestedCombinedData){
 			return scale*i + birthRateExtent[0]; 
 		}))
 		.range(birthRateColors);
-	var scaleGDP = d3.scaleSqrt()
-		.domain(GDPExtent)
-		.range([minCircleRadius,maxCircleRadius]);
 
 	// add svg elements
 	var svg = mainDiv.append("svg")
@@ -70,7 +68,7 @@ function displayCombinedData(combinedData, nestedCombinedData){
 	var g = svg.append("g");
 
 	var format = d3.format(",d");
-	var pack = d3.pack().size([screenWidth, screenHeight]).padding(0.5);
+	var pack = d3.pack().size([screenWidth*SCALE_CIRCLES, screenHeight*SCALE_CIRCLES]).padding(0.5);
 
 	// wrap data in useable format for circle packing
 	var continent = {
@@ -88,7 +86,7 @@ function displayCombinedData(combinedData, nestedCombinedData){
 	var node = g.selectAll(".node")
 	.data(continent.leaves())
 	.enter().append("g")
-	.attr("transform", translateCountries);
+	.attr("transform", transformCountries);
 
 	// add surrounding circles for continent
 	continent.children.forEach(function(continent) {
@@ -96,7 +94,8 @@ function displayCombinedData(combinedData, nestedCombinedData){
 		.attr("r", continent.r)
 		.style("stroke", "#ccc")
 		.style("fill", "none")
-		.attr("transform", translateContinent(continent));
+		.attr("transform", "scale("+ 0.5 + ")")
+		.attr("transform", transformContinent(continent));
 	});
 
 	// add country circles filled with color based on birthrate and radius based on gdp
@@ -112,7 +111,7 @@ function displayCombinedData(combinedData, nestedCombinedData){
 	});
 
 	// add the names of each country on their repective circles
-	node.append("text") 
+	node.append("text").attr("class", "labels")
 	.attr("text-anchor", "middle")
 	.attr("alignment-baseline", "middle")
 	.attr("fill", "black")
@@ -131,7 +130,7 @@ function displayLegend(scaleBirthRate){
 		.attr("transform", "translate(50, 30)");
 
 	var legendOrdinal = d3.legendColor()
-		.title("Birth Rates in Births Per Woman")
+		.title("Birth Rates (Births Per Woman)")
 		.shapeWidth(30)
     	.labels(d3.legendHelpers.thresholdLabels)
     	.labelFormat(d3.format(".2f"))
