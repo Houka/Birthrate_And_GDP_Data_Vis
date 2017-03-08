@@ -125,11 +125,6 @@ function displayCombinedData(combinedData, nestedCombinedData){
 	node.append("text").attr("class", "labels")
 	.attr("text-anchor", "middle")
 	.attr("alignment-baseline", "middle")
-	.attr("fill", function(d) {
-		var color = scaleBirthRate(+d.data.birthrate);
-		if (color== '#f7bba6')
-			return "black !important";
-	})
 	.text(function(d) { 
 		return d.data.name; 
 	});
