@@ -1,11 +1,7 @@
-// js for the circle graphs
-//
-// - gdp per cap would be size of circles, sqrt scale
-// - birth rate would be color, 7-10 discrete colors
-// - big circles to contain continents for organization purposes
+// Circle graphs display script
 
+// Global Variables
 var SCALE_CIRCLES = 1.2;
-
 var birthRateColors =['#f7bba6','#ed8495','#e05286','#a73b8f','#6f2597','#511b75','#37114e'].reverse();
 var continentLocations = {
 	NA:{x:screenWidth*.2, y:screenHeight*.4}, 
@@ -16,6 +12,7 @@ var continentLocations = {
 	OC:{x:screenWidth*.8, y:screenHeight*.75}, 
 	AN:{x:800, y:100}
 };	// uses svg absolute coordinates (i.e. (0,0) is top left corner)
+
 
 /* Returns how much counrty circles should be translated based on the continent.
 	translates all circles within the continent circle by the same amount
@@ -30,6 +27,7 @@ function transformCountries(d) {
 	return "translate(" + x + "," + y + ")";
 }
 
+
 /* Returns how much a continent circle should be translated based on the continent.
 */
 function transformContinent(d) {
@@ -39,33 +37,37 @@ function transformContinent(d) {
 	return "translate(" + x + "," + y + ")";
 }
 
-function displayCombinedData(combinedData, nestedCombinedData){
-	// break up data and change data values from number strings to number numbers
+
+/* Returns d3 scaling function of the birth rate with a domain based of 
+	the birth rate numbers and the range being the color bins 
+*/
+function getBirthRateScale(combinedData){
 	var birthRateExtent = d3.extent(combinedData, function(d) {	
 		var data = d.values[0];
 		return +data.birthrate; 
 	});
-	var GDPExtent = d3.extent(combinedData, function(d) { 
-		var data = d.values[0];
-		return +data.gdp; 
-	});
 
-	// scaling functions
-	var scaleBirthRate = d3.scaleThreshold()
+	return d3.scaleThreshold()
 		.domain(d3.range(birthRateColors.length-1).map(function(i){ 
 			var diff = birthRateExtent[1] - birthRateExtent[0];
 			var scale = diff/(birthRateColors.length-1);
 			return scale*i + birthRateExtent[0]; 
 		}))
 		.range(birthRateColors);
+}
+
+
+/* Creates and draws all the circles countries and continents
+*/
+function displayCombinedData(combinedData, nestedCombinedData){
+	// scaling function
+	var scaleBirthRate = getBirthRateScale(combinedData);
 
 	// add svg elements
 	var svg = mainDiv.append("svg")
 		.attr("height", "100%")
 		.attr("width", "100%");
 	var g = svg.append("g");
-
-	var format = d3.format(",d");
 	var pack = d3.pack().size([screenWidth*SCALE_CIRCLES, screenHeight*SCALE_CIRCLES]).padding(0.5);
 
 	// wrap data in useable format for circle packing
@@ -74,39 +76,43 @@ function displayCombinedData(combinedData, nestedCombinedData){
 		children: nestedCombinedData
 	};
 
+	// create hierarchy for circle packing
 	continent = d3.hierarchy(continent)
-	.sum(function(d) {
-		return d.size;
-	});
-
+		.sum(function(d) {
+			return d.size;
+		});
 	pack(continent);
 
+	// create groups for each country and translate them to map positions
 	var node = g.selectAll(".node")
-	.data(continent.leaves())
-	.enter().append("g")
-	.attr("transform", transformCountries);
+		.data(continent.leaves())
+		.enter().append("g")
+		.attr("transform", transformCountries);
 
 	// add surrounding circles for continent
-	continent.children.forEach(function(continent) {
+	continent.children.forEach(function(c) {
+		// add the continent encompassing circle
 		g.append("g").append("circle")
-		.attr("r", continent.r)
+		.attr("r", c.r)
 		.style("stroke", "#aaa")
 		.style("fill", "none")
-		.attr("transform", transformContinent(continent));
+		.attr("transform", transformContinent(c));
 
+		// add the continent label background circle
 		g.append("g").append("circle")
 		.attr("r", 10)
 		.style("fill", "#111")
 		.style("stroke", "#aaa")
-		.attr("transform", transformContinent(continent) + "translate(" + continent.r/Math.sqrt(2) + "," + continent.r/Math.sqrt(2) + ")");
+		.attr("transform", transformContinent(c) + "translate(" + c.r/Math.sqrt(2) + "," + c.r/Math.sqrt(2) + ")");
 
+		// add the continent label text
 		g.append("g").append("text")
-		.text(continent.data.name)
+		.text(c.data.name)
 		.style("alignment-baseline", "middle")
 		.style("text-anchor", "middle")
 		.style("fill", "#ccc")
 		.style("font-size", "8px")
-		.attr("transform", transformContinent(continent) + "translate(" + continent.r/Math.sqrt(2) + "," + continent.r/Math.sqrt(2) + ")");
+		.attr("transform", transformContinent(c) + "translate(" + c.r/Math.sqrt(2) + "," + c.r/Math.sqrt(2) + ")");
 	});
 
 	// add country circles filled with color based on birthrate and radius based on gdp
@@ -128,17 +134,13 @@ function displayCombinedData(combinedData, nestedCombinedData){
 	.text(function(d) { 
 		return d.data.name; 
 	});
-
-	displayLegend(scaleBirthRate);
-
 }
 
-function displayLegend(scaleBirthRate){
-	d3.select("svg").append("g")
-		.attr("class", "legendOrdinal")
-		.attr("transform", " scale("+1/widthScale+", "+1/widthScale+"), "+
-				"translate("+screenWidth*.005+", "+screenHeight*.05+")");
 
+/* Creates and draws the color legend based on the coloring and birthrates
+*/
+function displayLegend(combinedData){
+	var scaleBirthRate = getBirthRateScale(combinedData);
 	var legendOrdinal = d3.legendColor()
 		.title("Birth Rates (Births Per Woman)")
 		.shapeWidth(30)
@@ -147,9 +149,13 @@ function displayLegend(scaleBirthRate){
 		.orient("vertical")
 		.scale(scaleBirthRate);
 
+	// add and draw legend
+	d3.select("svg").append("g")
+		.attr("class", "legendOrdinal")
+		.attr("transform", " scale("+1/widthScale+", "+1/widthScale+"), "+
+				"translate("+screenWidth*.005+", "+screenHeight*.05+")");
 	d3.select(".legendOrdinal")
 		.call(legendOrdinal);
-
 }
 
 

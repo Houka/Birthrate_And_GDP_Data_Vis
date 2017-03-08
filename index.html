@@ -1,34 +1,36 @@
 <html>
 <head>
-	<title>INFO 3300 - Project 1</title>
+	<title>INFO 3300 - Project 1 (cl795, fyw6, kar286)</title>
 	<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="main.css">
 	<script src="https://d3js.org/d3.v4.min.js"></script>
 	<script src="http://d3js.org/topojson.v2.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.21.0/d3-legend.min.js"></script>
-	<style>
-		h1 {font-family: 'Montserrat', sans-serif; text-align: center; color:#333;}
-		div { font-family: 'Montserrat', sans-serif; background-color: #ffffff; color:#ccc; text-align: center}
-		svg { border: solid #ccc 1px; background-image: url("worldmap.png"); background-size: 100% 100%; background-color: #111;}
-		text { fill: white; }
-		.labels { font-size: 6pt; opacity: 0.5; fill: #fff;}
-	</style>
 </head>
 <body>
 	<h1></h1>
-	<div id="visualization" style="width: 100%;">
-		Sources: http://data.worldbank.org, http://country.io/data/
+	<div id="visualization" style="width: 100%;"></div>
+	<div style="text-align: left; padding-left: 30px">
+		<br>
+		Sources: 
+		<br>&nbsp&nbsp 1. &nbsp&nbsp http://data.worldbank.org/indicator/NY.GDP.PCAP.CD?view=chart
+		<br>&nbsp&nbsp 2. &nbsp http://data.worldbank.org/indicator/SP.DYN.TFRT.INhttp://data.worldbank.org
+		<br>&nbsp&nbsp 3. &nbsp http://country.io/data/
+		<br>&nbsp&nbsp 4. &nbsp https://blog.graphiq.com/finding-the-right-color-palettes-for-data-visualizations-fcd4e707a283#.i66tky67f
+		<br>&nbsp&nbsp 5. &nbsp https://bl.ocks.org/mbostock/4063530
 	</div>
 
-	<script>
-		// initial setup script
-
+	<script> // initial setup script
 		var debug = false;
-		var footerOffset = 30, sideOffset = 15;
 		var mainDiv = d3.select("#visualization"); 
+
 		// screen resolution
 		var widthScale = 1500/window.innerWidth;
 		var screenHeight = 700 / widthScale;
 		var screenWidth = 1500 / widthScale;
+		var footerOffset = 50;
+
+		// data filtering vars
 		var year = 1999, threshold = 2;
 
 		// code for debugs
@@ -36,24 +38,20 @@
 			mainDiv.style("border", "1px solid black");
 
 		// set height to window height
-		mainDiv.style("height", screenHeight + 50);
-		mainDiv.style("width", "100%");
+		mainDiv
+			.style("height", screenHeight + footerOffset)
+			.style("width", "100%");
 
+		// set the header title
 		d3.select("h1").text("GDP vs Birth Rates in World Countries ("+year+")")
-
 	</script>
 
 	<script src = "CircleGraph.js"></script>
 	<script src = "DataFilterer.js"></script>
+	<script src = "DataParser.js"></script>
 
-	<script>
-		// data accessing and parsing script
-
-		var birthData;
-		var GDPData;
-
-		/* Load the csv data files and then runs a callback to display the data
-		*/
+	<script> // get, filter, and display data
+		// Load the csv data files and then runs a callback to display the data
 		loadData(function(birthData, GDPData, rawCountryData) {
 			// filter data
 			birthData = filterDataByYear(birthData,year);
@@ -66,45 +64,12 @@
 
 			// combine datasets into one array and display the data
 			var combinedData = combineData(year, birthData, GDPData, rawCountryData);
-			displayCombinedData(convertData(combinedData), convertDataNested(combinedData));
+			var convertedCombineData = convertData(combinedData);
+			displayCombinedData(convertedCombineData, convertDataNested(combinedData));
+
+			// draw the legend
+			displayLegend(convertedCombineData);
 		});
-
-		/* Loads and parses the data files and then supplies the callback with the data in a easy to use form*/
-		function loadData(callback){
-			d3.csv("BirthRate.csv", parseBirth, function(error, data){
-				var nestedBirthData = d3.nest()
-				.key(function(d) {
-					return d.country; 
-				})
-				.sortKeys(d3.ascending)
-				.entries(data);
-
-				d3.csv("GDPPerCap.csv", parseGDP, function(error, data){
-					var nestedGDPData = d3.nest()
-					.key(function(d) {
-						return d.country; 
-					})
-					.sortKeys(d3.ascending)
-					.entries(data);
-
-					d3.json("CountryData.json", function(error, data) {
-						callback(nestedBirthData, nestedGDPData, data);
-					});
-				});
-			});
-		};
-
-		/* Helper functions for parsing the csv files into useable object*/
-		function parseBirth (line) {
-			line.country = line['Country Name'];
-			return line;
-		}
-
-		function parseGDP (line) {
-			line.country = line['Country Name'];
-			return line;
-		}
-
 	</script>
 
 </body>
