@@ -1,3 +1,5 @@
+// Data filtering and conversion script
+
 /* Returns true if the countryName is a valid country name false otherwise
 */ 
 function isValidCountryName(countryName, countryData){

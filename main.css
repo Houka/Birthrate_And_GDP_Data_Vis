@@ -1,0 +1,29 @@
+h1 {
+	font-family: 'Montserrat', sans-serif; 
+	text-align: center; 
+	color:#333;
+}
+
+div { 
+	font-family: 'Montserrat', sans-serif; 
+	background-color: #ffffff; 
+	color:#999; 
+	text-align: center;
+}
+
+svg { 
+	border: solid #ccc 1px; 
+	background-image: url("worldmap.png"); 
+	background-size: 100% 100%; 
+	background-color: #111;
+}
+
+text { 
+	fill: white; 
+}
+
+.labels { 
+	font-size: 5pt; 
+	opacity: 0.5; 
+	fill: #fff;
+}
