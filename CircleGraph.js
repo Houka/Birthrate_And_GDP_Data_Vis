@@ -119,17 +119,26 @@ function displayCombinedData(combinedData, nestedCombinedData){
 }
 
 function displayLegend(birthRateExtent){
-	var legendSize = d3.scaleOrdinal()
-		.domain(birthRateExtent)
+	var legendSize = d3.scaleThreshold()
+		.domain(d3.range(birthRateColors.length-1).map(function(i){ 
+			var diff = birthRateExtent[1] - birthRateExtent[0];
+			var scale = diff/(birthRateColors.length-1);
+			return scale*i + birthRateExtent[0]; 
+		}))
 		.range(birthRateColors);
+
+	console.log(birthRateExtent);
+	console.log(legendSize.range);
 
 	d3.select("svg").append("g")
 		.attr("class", "legendOrdinal")
 		.attr("transform", "translate(50, 30)");
 
 	var legendOrdinal = d3.legendColor()
-		.title("Legend")
+		.title("Birth Rates in Births Per Woman")
 		.shapeWidth(30)
+    	.labels(d3.legendHelpers.thresholdLabels)
+    	.labelFormat(d3.format(".2f"))
 		.orient("vertical")
 		.scale(legendSize);
 
