@@ -1,0 +1,54 @@
+\documentclass[12pt]{article}
+\usepackage{fullpage}
+\usepackage{setspace}
+\usepackage{geometry}
+\geometry{margin=1in}
+\doublespacing
+
+\begin{document}
+\begin{center}
+\section*{INFO 3300, Project 1}
+\subsection*{\textit{Changxu Lu, cl795}}
+\subsection*{\textit{Fawn Wong, fyw6}}
+\subsection*{\textit{Kira Roybal, kar286}}
+\end{center}
+
+\section*{A}
+We pulled our data from the World Bank database; we combined a dataset on GDP per capita (in $US) and
+ $ 
+another on fertility rate (births per woman). The two datasets included every country, GDP or fertility
+rate, and year as the variables. Some countries had missing data values, so we had to extract them from
+their respective data sets and make sure that both data sets contained the same countries. We parsed the
+data into a json object where each country is a key that has as its value other keys ("GDP" and "Birth
+Rate"). In order to display the differences and disparities between wealthier nations and poorer nations
+we chose to use the d3.pack layout: countries are represented as circles and the size of the circle is
+determined by that country's GDP. Birth rates are represented by a range of colors: countries with lower
+birth rates are darker and countries with higher birth rates are lighter. In order to use the pack
+layout we had to create a hierarchy out of the data, meaning we need to create a further nested json
+object. We also created a separate json file ("CountryData.json") to map each country to its respective
+continent thus allowing us to use a separate pack layout for each country. Our "continents" were positioned similar to their position on the map of the world that we are used to seeing.
+
+\section*{B}
+As mentioned in part A, we used d3.pack to position and compress the countries to their respective
+continents. It positions the country "children" within the outer circle of the "parent" continent.The birth
+rate data used a threshold scale that created bins based on the number of colors we give to the birth
+rate data (for plotting); each of the bins (and the range of values within them) corresponds to a color,
+and that color thus corresponds to fertility rate. We did not need a scale for the GDP, as d3.pack handled the relative scaling of the circles. The continents and countries were positioned relative
+to screenWidth and screenHeight and to our photo map of the world. We found an online palette for the color scale, and when the birth rate data is scaled, each color is
+assigned to a different range (bin) of the fertility data. 
+
+\section*{C}
+Our visualization shows the relationship between wealth (or the lack of it) and birth rate, and thus is
+allows us to make inferences about this relationship. Wealthier nations with higher GDPs have lower 
+birth rates while poorer nations or those with small economies tend to have higher birth rates. In the 
+case of the European Union, countries with a lower GDP also had lower birth rates, which could be due to
+the higher standard of living and widespread access to higher education that comes with being a member
+of the E.U. This design also displays the nations of the world in a way that we are not used to looking at them: their size is not based on geography but on economic importance. We can notice that Japan is now the largest nation in the Asian continent, which speaks to its global influence. We can also notice that continents with mainly developing nations are full of small circles because many of those nations have weak and/or developing economies or are handling the ramifications of colonialism and wars from the last century. 
+
+
+
+
+
+
+
+\end{document}
