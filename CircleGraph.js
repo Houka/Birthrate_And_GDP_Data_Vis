@@ -60,6 +60,17 @@ function getBirthRateScale(combinedData){
 /* Creates and draws all the circles countries and continents
 */
 function displayCombinedData(combinedData, nestedCombinedData){
+	//update continent locations on a refresh
+	continentLocations = {
+		NA:{x:screenWidth*.2, y:screenHeight*.4}, 
+		SA:{x:screenWidth*.2, y:screenHeight*.7}, 
+		EU:{x:screenWidth*.55, y:screenHeight*.35}, 
+		AF:{x:screenWidth*.5, y:screenHeight*.8},
+		AS:{x:screenWidth*.81, y:screenHeight*.3}, 
+		OC:{x:screenWidth*.8, y:screenHeight*.75}, 
+		AN:{x:800, y:100}
+	};	// uses svg absolute coordinates (i.e. (0,0) is top left corner)
+	
 	// scaling function
 	var scaleBirthRate = getBirthRateScale(combinedData);
 
