@@ -22,6 +22,20 @@ text {
 	fill: white;
 }
 
+select {
+   -webkit-appearance: none; 
+   -moz-appearance: none;
+   appearance: none;
+   border: none;
+   font-size: 24pt;
+   font-family: 'Montserrat', sans-serif;
+   color:#a33;
+}
+
+option{
+   text-align: right;
+}
+
 .labels { 
 	font-size: 6pt; 
 	opacity: 0.5; 

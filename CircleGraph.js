@@ -63,11 +63,12 @@ function displayCombinedData(combinedData, nestedCombinedData){
 	// scaling function
 	var scaleBirthRate = getBirthRateScale(combinedData);
 
-	// add svg elements
+	// get svg elements
 	var svg = mainDiv.append("svg")
 		.attr("height", "100%")
 		.attr("width", "100%");
-	var g = svg.append("g");
+	var g = svg.append("g")
+			.attr("class", "world");
 	var pack = d3.pack().size([screenWidth*SCALE_CIRCLES, screenHeight*SCALE_CIRCLES]).padding(0.5);
 
 	// wrap data in useable format for circle packing
