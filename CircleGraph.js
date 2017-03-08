@@ -122,10 +122,10 @@ function displayCombinedData(combinedData, nestedCombinedData){
 }
 
 function displayLegend(scaleBirthRate){
-
 	d3.select("svg").append("g")
 		.attr("class", "legendOrdinal")
-		.attr("transform", "translate(50, 30)");
+		.attr("transform", " scale("+1/widthScale+", "+1/widthScale+"), "+
+				"translate("+screenWidth*.005+", "+screenHeight*.05+")");
 
 	var legendOrdinal = d3.legendColor()
 		.title("Birth Rates (Births Per Woman)")

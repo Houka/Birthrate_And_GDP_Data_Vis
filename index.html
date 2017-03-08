@@ -25,8 +25,11 @@
 		var debug = false;
 		var footerOffset = 30, sideOffset = 15;
 		var mainDiv = d3.select("#visualization");
-		var screenHeight = 700;
-		var screenWidth = 1500;
+
+		// screen resolution
+		var widthScale = 1500/window.innerWidth;
+		var screenHeight = 700 / widthScale;
+		var screenWidth = 1500 / widthScale;
 		var year = 1999, threshold = 2;
 
 		// code for debugs
