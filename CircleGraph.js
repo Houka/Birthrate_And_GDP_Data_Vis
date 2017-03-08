@@ -114,8 +114,8 @@ function displayCombinedData(combinedData, nestedCombinedData){
 		return d.data.name; 
 	});
 
-	// display legend
 	displayLegend(birthRateExtent);
+
 }
 
 function displayLegend(birthRateExtent){
@@ -126,9 +126,6 @@ function displayLegend(birthRateExtent){
 			return scale*i + birthRateExtent[0]; 
 		}))
 		.range(birthRateColors);
-
-	console.log(birthRateExtent);
-	console.log(legendSize.range);
 
 	d3.select("svg").append("g")
 		.attr("class", "legendOrdinal")
@@ -142,7 +139,7 @@ function displayLegend(birthRateExtent){
 		.orient("vertical")
 		.scale(legendSize);
 
-	d3.select("svg").select(".legendOrdinal")
+	d3.select(".legendOrdinal")
 		.call(legendOrdinal);
 
 }
