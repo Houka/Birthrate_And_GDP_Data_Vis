@@ -15,6 +15,8 @@ var continentLocations = {
 	OC:{x:screenWidth*.85, y:screenHeight*.8}, 
 	AN:{x:800, y:100}
 };	// uses svg absolute coordinates (i.e. (0,0) is top left corner)
+var minCircleRadius = 5,
+	maxCircleRadius = 100;
 
 /* Returns how much counrty circles should be translated based on the continent.
 	translates all circles within the continent circle by the same amount
@@ -50,12 +52,16 @@ function displayCombinedData(combinedData, nestedCombinedData){
 	});
 
 	// scaling functions
-	var scaleBirthRate = d3.scaleOrdinal()
-		.domain(birthRateExtent)
+	var scaleBirthRate = d3.scaleThreshold()
+		.domain(d3.range(birthRateColors.length-1).map(function(i){ 
+			var diff = birthRateExtent[1] - birthRateExtent[0];
+			var scale = diff/(birthRateColors.length-1);
+			return scale*i + birthRateExtent[0]; 
+		}))
 		.range(birthRateColors);
 	var scaleGDP = d3.scaleSqrt()
 		.domain(GDPExtent)
-		.range([5,100]);
+		.range([minCircleRadius,maxCircleRadius]);
 
 	// add svg elements
 	var svg = mainDiv.append("svg")
@@ -111,21 +117,15 @@ function displayCombinedData(combinedData, nestedCombinedData){
 	.attr("alignment-baseline", "middle")
 	.attr("fill", "black")
 	.text(function(d) { 
+		console.log(d);
 		return d.data.name; 
 	});
 
-	displayLegend(birthRateExtent);
+	displayLegend(scaleBirthRate);
 
 }
 
-function displayLegend(birthRateExtent){
-	var legendSize = d3.scaleThreshold()
-		.domain(d3.range(birthRateColors.length-1).map(function(i){ 
-			var diff = birthRateExtent[1] - birthRateExtent[0];
-			var scale = diff/(birthRateColors.length-1);
-			return scale*i + birthRateExtent[0]; 
-		}))
-		.range(birthRateColors);
+function displayLegend(scaleBirthRate){
 
 	d3.select("svg").append("g")
 		.attr("class", "legendOrdinal")
@@ -137,7 +137,7 @@ function displayLegend(birthRateExtent){
     	.labels(d3.legendHelpers.thresholdLabels)
     	.labelFormat(d3.format(".2f"))
 		.orient("vertical")
-		.scale(legendSize);
+		.scale(scaleBirthRate);
 
 	d3.select(".legendOrdinal")
 		.call(legendOrdinal);
