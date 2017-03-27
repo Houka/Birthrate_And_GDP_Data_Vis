@@ -158,7 +158,6 @@ function displayLegend(combinedData){
  		var data = d.values[0];
  		return +(+data.gdp).toFixed(2); 
  	});
- 	console.log(GDPExtent);
  	var scaleGDP = d3.scaleOrdinal()
 		.domain(GDPExtent)
 		.range(GDPExtent);
